@@ -1,35 +1,45 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// Pages
+import HomePage from './pages/HomePage';
+import NftListingsPage from './pages/NftListingsPage';
+import NftDetailsPage from './pages/NftDetailsPage';
+import UserProfilePage from './pages/UserProfilePage';
+import MintNftPage from './pages/MintNftPage';
+import SellNftPage from './pages/SellNftPage';
+import BuyNftPage from './pages/BuyNftPage';
+import TradeNftPage from './pages/TradeNftPage';
+import ConnectWalletPage from './pages/ConnectWalletPage';
+
+// Components
+import NavBar from './components/NavBar';
+// import NavigationBar from './components/NavigationBar';
+
 import './App.css';
-import { backend } from "./declarations/icpAgent";
-import { Principal } from "@dfinity/principal";
+import './index.css';
 
-function App() {
-
-  const fetchBalance = async (user: string) => {
-    console.log("FETCH BALANCE");
-    try {
-      const principal = Principal.fromText(user);
-      const balance: any = await backend.balanceOfDip721(principal);
-      console.log("Balance:", balance.toString());
-    } catch (error) {
-      console.error("Failed to fetch balance:", error);
-    }
-  };
-
-  const handleSeeBalanceClick = () => {
-    const testPrincipal = "565ec-3m77y-baush-ctl56-fov37-67wgb-ikzsx-h5xdb-7qo74-njlng-kae";
-    fetchBalance(testPrincipal);
-  };
-  
-
-  
-
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <button onClick={handleSeeBalanceClick}>SEE BALANCE</button>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        {/* Optional: Switch between NavigationBar and NavBar */}
+        {/* <NavigationBar /> */}
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/nfts" element={<NftListingsPage />} />
+          <Route path="/nft/:id" element={<NftDetailsPage />} /> {/* :id is NFT identifier */}
+          <Route path="/profile" element={<UserProfilePage />} />
+          <Route path="/mint" element={<MintNftPage />} />
+          <Route path="/sell" element={<SellNftPage />} />
+          <Route path="/buy/:id" element={<BuyNftPage />} /> {/* :id is NFT identifier */}
+          <Route path="/trade/:id" element={<TradeNftPage />} /> {/* :id is NFT identifier */}
+          <Route path="/connect-wallet" element={<ConnectWalletPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;

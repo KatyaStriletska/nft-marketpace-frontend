@@ -1,38 +1,211 @@
-.App {
-  text-align: center;
-}
+/* Basic Reset and Font */
+@import "tailwindcss";
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+body, h1, h2, h3, h4, h5, h6, p, ul, li {
+    margin: 0;
+    padding: 0;
+    border: 0;
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    background: rgb(84,110,243);
+    background: radial-gradient(circle, rgba(84,110,243,1) 0%, rgba(67,63,185,1) 37%, rgba(67,62,183,1) 38%, rgba(64,3,113,1) 100%);
+    /* color: #333; Dark grey text */
   }
-  to {
-    transform: rotate(360deg);
+  
+  .App {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
   }
-}
+  
+  /* Header Style (you might want to adjust this based on your actual header) */
+  .App-header {
+    background-color: #282c34; /* Dark background for header */
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+  }
+  
+  /* Main Content Area */
+  .App > div {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  /* Navigation Bar Styles (consistent with NavigationBar.css) */
+  /* .navigation-bar {
+    background-color: #f8f9fa;
+    padding: 15px 20px;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .navigation-bar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 20px;
+    justify-content: center; /* Center the navigation links */
+  /* } */
+/*   
+  .navigation-bar li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+  }
+  
+  .navigation-bar li a:hover {
+    color: #007bff; /* Blue hover color 
+  }
+   */ */*/
+  /* Button Styles (trying to be consistent with previous button colors) */
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+  
+  .primary-button {
+    background-color: #007bff; /* Blue for primary actions */
+    color: white;
+  }
+  
+  .primary-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .secondary-button {
+    background-color: #6c757d; /* Grey for secondary actions */
+    color: white;
+  }
+  
+  .secondary-button:hover {
+    background-color: #545b62;
+  }
+  
+  .buy-button {
+    background-color: #008000; /* Green for buying */
+    color: white;
+  }
+  
+  .buy-button:hover {
+    background-color: #006400;
+  }
+  
+  .trade-button {
+    background-color: #ffc107; /* Yellow for trading */
+    color: black;
+  }
+  
+  .trade-button:hover {
+    background-color: #e0a800;
+  }
+  
+  /* Link Styles
+  a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+   */
+  /* Form Styles (basic form styling for consistency) */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group input[type="file"],
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .form-group textarea {
+    min-height: 100px;
+  }
+  
+  /* NFT Grid (you might want to adjust the layout) */
+  .nft-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+  }
+  
+  .nft-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    background-color: white;
+  }
+  
+  .nft-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .nft-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+  }
+  
+  .nft-item p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  
+  /* Profile Page Styles (adjust as needed) */
+  .profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-right: 20px;
+    object-fit: cover;
+  }
+  
+  /* Error and Success Messages */
+  .error-message {
+    color: rgb(163, 38, 38);
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  .connected-message {
+    color: rgb(33, 149, 33);
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  /* Add more global styles here as you develop your application */

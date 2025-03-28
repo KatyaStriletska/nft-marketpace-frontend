@@ -1,0 +1,40 @@
+
+.sell-nft-page {
+    padding: 20px;
+  }
+  
+  .sell-nft-page h1 {
+    margin-bottom: 20px;
+  }
+  
+  .sell-nft-page form {
+    max-width: 500px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .form-group select,
+  .form-group input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  .sell-nft-page button[type="submit"] {
+    padding: 10px 20px;
+    border: none;
+    background-color: #28a745; /* Green color for selling */
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }

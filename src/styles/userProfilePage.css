@@ -1,0 +1,85 @@
+
+.user-profile-page {
+    padding: 20px;
+  }
+  
+  .profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-right: 20px;
+    object-fit: cover;
+  }
+  
+  .profile-header h1 {
+    margin: 0;
+  }
+  
+  .profile-header button {
+    margin-left: auto;
+    padding: 10px 15px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .owned-nfts h2, .purchase-history h2, .sale-history h2 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+  }
+  
+  .owned-nfts .nft-list {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 15px;
+  }
+  
+  .owned-nfts .nft-card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 8px;
+    width: 200px;
+    text-align: center;
+  }
+  
+  .owned-nfts .nft-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .owned-nfts .nft-card h3 {
+    font-size: 1em;
+    margin-bottom: 5px;
+  }
+  
+  .owned-nfts .nft-card p {
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  
+  .purchase-history ul, .sale-history ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .purchase-history li, .sale-history li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .purchase-history li:last-child, .sale-history li:last-child {
+    border-bottom: none;
+  }

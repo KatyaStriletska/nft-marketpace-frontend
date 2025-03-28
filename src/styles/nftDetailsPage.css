@@ -1,0 +1,49 @@
+
+.nft-details-page {
+    padding: 20px;
+  }
+  
+  .nft-image {
+    max-width: 400px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .nft-description {
+    margin-bottom: 15px;
+    line-height: 1.6;
+  }
+  
+  .nft-owner, .nft-price {
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  .nft-actions button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .nft-history {
+    margin-top: 30px;
+  }
+  
+  .nft-history ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .nft-history li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .nft-history li:last-child {
+    border-bottom: none;
+  }

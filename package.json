@@ -6,6 +6,8 @@
     "@dfinity/agent": "^2.4.0",
     "@dfinity/candid": "^2.4.0",
     "@dfinity/principal": "^2.4.0",
+    "@headlessui/react": "^2.2.0",
+    "@heroicons/react": "^2.2.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",

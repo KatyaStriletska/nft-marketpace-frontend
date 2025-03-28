@@ -14,7 +14,7 @@ import ConnectWalletPage from './pages/ConnectWalletPage';
 
 // Components
 import NavBar from './components/NavBar';
-// import NavigationBar from './components/NavigationBar';
+//import NavigationBar from './components/NavigationBar';
 
 import './App.css';
 import './index.css';

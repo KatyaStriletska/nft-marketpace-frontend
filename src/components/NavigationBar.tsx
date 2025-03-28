@@ -2,15 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './navigationBar.css';
 
-function NavigationBar() {
+const NavigationBar: React.FC = () => {
   return (
     <nav className="navigation-bar">
       <div>
-        <h1 class="text-3xl font-bold text-white bg-yellow">NFT-marketplace</h1>
+        <h1 className="text-3xl font-bold text-white bg-yellow">NFT-marketplace</h1>
       </div>
       <ul>
         <li>
-            <Link to="/">Home</Link>
+          <Link to="/">Home</Link>
         </li>
         <li>
           <Link to="/nfts">All NFTs</Link>
@@ -27,10 +27,9 @@ function NavigationBar() {
         <li>
           <Link to="/connect-wallet">Connect Wallet</Link>
         </li>
-        {/* You can add more links here as needed */}
       </ul>
     </nav>
   );
-}
+};
 
 export default NavigationBar;

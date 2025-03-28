@@ -6,4 +6,4 @@ export const idlFactory = ({ IDL }: { IDL: typeof import("@dfinity/candid").IDL 
     setMessage: IDL.Func([IDL.Text], [], []),
   });
 
-export const canisterId = "avqkn-guaaa-aaaaa-qaaea-cai"; // Вкажіть ID вашої каністри
+export const canisterId = "asrmz-lmaaa-aaaaa-qaaeq-cai"; // Вкажіть ID вашої каністри

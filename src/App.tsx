@@ -1,34 +1,32 @@
-
 import './App.css';
-  import { backend } from "./declarations/icpAgent";
+import { backend } from "./declarations/icpAgent";
+import { Principal } from "@dfinity/principal";
 
 function App() {
 
-const fetchBalance = async (user: string) => {
-  console.log("FEATCH BALANCE")
-  try {
-    const balance:any = await backend.balanceOfDip721(user);
-    console.log("Balance:", balance.toString());
-  } catch (error) {
-    console.error("Failed to fetch balance:", error);
-  }
-};
-async function loadData() {
-  try {
-    const response = await backend.http_request({
-      url: "https://localhost:3000/1"
-    });
-    console.log("Response: ", response);
-  } catch (error) {
-    console.error("Failed to load data:", error);
-  }
-}
+  const fetchBalance = async (user: string) => {
+    console.log("FETCH BALANCE");
+    try {
+      const principal = Principal.fromText(user);
+      const balance: any = await backend.balanceOfDip721(principal);
+      console.log("Balance:", balance.toString());
+    } catch (error) {
+      console.error("Failed to fetch balance:", error);
+    }
+  };
 
-// loadData();
+  const handleSeeBalanceClick = () => {
+    const testPrincipal = "565ec-3m77y-baush-ctl56-fov37-67wgb-ikzsx-h5xdb-7qo74-njlng-kae";
+    fetchBalance(testPrincipal);
+  };
+  
+
+  
+
   return (
     <div className="App">
       <header className="App-header">
-        <button onClick={()=> fetchBalance}>SEE BALANCE</button>
+        <button onClick={handleSeeBalanceClick}>SEE BALANCE</button>
       </header>
     </div>
   );

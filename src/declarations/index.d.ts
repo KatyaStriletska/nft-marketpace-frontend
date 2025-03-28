@@ -1,51 +1,44 @@
 import type {
-    ActorSubclass,
-    HttpAgentOptions,
-    ActorConfig,
-    Agent,
-  } from "@dfinity/agent";
-  import type { Principal } from "@dfinity/principal";
-  import type { IDL } from "@dfinity/candid";
-  
-  import { _SERVICE } from './dip721_nft_container.did';
-  
-  export declare const idlFactory: IDL.InterfaceFactory;
-  export declare const canisterId: string;
-  
-  export declare interface CreateActorOptions {
-    /**
-     * @see {@link Agent}
-     */
-    agent?: Agent;
-    /**
-     * @see {@link HttpAgentOptions}
-     */
-    agentOptions?: HttpAgentOptions;
-    /**
-     * @see {@link ActorConfig}
-     */
-    actorOptions?: ActorConfig;
-  }
-  
-  /**
-   * Intializes an {@link ActorSubclass}, configured with the provided SERVICE interface of a canister.
-   * @constructs {@link ActorSubClass}
-   * @param {string | Principal} canisterId - ID of the canister the {@link Actor} will talk to
-   * @param {CreateActorOptions} options - see {@link CreateActorOptions}
-   * @param {CreateActorOptions["agent"]} options.agent - a pre-configured agent you'd like to use. Supercedes agentOptions
-   * @param {CreateActorOptions["agentOptions"]} options.agentOptions - options to set up a new agent
-   * @see {@link HttpAgentOptions}
-   * @param {CreateActorOptions["actorOptions"]} options.actorOptions - options for the Actor
-   * @see {@link ActorConfig}
-   */
-  export declare const createActor: (
-    canisterId: string | Principal,
-    options?: CreateActorOptions
-  ) => ActorSubclass<_SERVICE>;
-  
-  /**
-   * Intialized Actor using default settings, ready to talk to a canister using its candid interface
-   * @constructs {@link ActorSubClass}
-   */
-  export declare const dip721_nft_container: ActorSubclass<_SERVICE>;
-  
+  ActorSubclass,
+  HttpAgentOptions,
+  ActorConfig,
+  Agent,
+} from "@dfinity/agent";
+import type { Principal } from "@dfinity/principal";
+import type { IDL } from "@dfinity/candid";
+import type { _SERVICE } from "./dip721_nft_container.did";
+
+/**
+ * IDL Factory generated from candid file.
+ */
+export declare const idlFactory: IDL.InterfaceFactory;
+
+/**
+ * Canister ID this actor will communicate with.
+ */
+export declare const canisterId: string;
+
+/**
+ * Options for creating a new actor.
+ */
+export declare interface CreateActorOptions {
+  agent?: Agent;
+  agentOptions?: HttpAgentOptions;
+  actorOptions?: ActorConfig;
+}
+
+/**
+ * Creates an actor for interacting with the DIP721 canister.
+ * @param canisterId - The ID of the canister
+ * @param options - Optional configuration for the actor/agent
+ * @returns The actor subclass for DIP721 service
+ */
+export declare function createActor(
+  canisterId: string | Principal,
+  options?: CreateActorOptions
+): Promise<ActorSubclass<_SERVICE>>;
+
+/**
+ * Convenience function to create the default DIP721 actor (connected to this canister).
+ */
+export declare function getActor(): Promise<ActorSubclass<_SERVICE>>;

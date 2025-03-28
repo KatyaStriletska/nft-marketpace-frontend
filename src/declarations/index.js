@@ -4,11 +4,17 @@ export { idlFactory } from "./dip721_nft_container.did.js";
 
 export const canisterId = "asrmz-lmaaa-aaaaa-qaaeq-cai";
 
+/**
+ * Create an actor with optional agent options.
+ * @param {string | import("@dfinity/principal").Principal} canisterId
+ * @param {object} options
+ * @returns {Promise<import("@dfinity/agent").ActorSubclass>}
+ */
 export const createActor = async (canisterId, options = {}) => {
   const agent =
     options.agent ||
     new HttpAgent({
-      host: "http://127.0.0.1:4943", // explicitly specify local replica host
+      host: "http://127.0.0.1:4943",
       ...options.agentOptions,
     });
 
@@ -18,7 +24,7 @@ export const createActor = async (canisterId, options = {}) => {
     );
   }
 
-  // Only fetch root key when NOT in production
+  // Only fetch root key in development
   if (process.env.DFX_NETWORK !== "ic") {
     try {
       await agent.fetchRootKey();
@@ -35,6 +41,8 @@ export const createActor = async (canisterId, options = {}) => {
   });
 };
 
-export const dip721_nft_container = canisterId
-  ? createActor(canisterId)
-  : undefined;
+/**
+ * Convenience method to quickly get an actor for the default canister.
+ * @returns {Promise<import("@dfinity/agent").ActorSubclass>}
+ */
+export const getActor = () => createActor(canisterId);

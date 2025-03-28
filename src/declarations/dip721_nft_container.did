@@ -126,6 +126,8 @@ type HttpResponse = record {
 };
 
 service : (InitArgs) -> {
+    tokensOfOwnerDip721 : (principal) -> (vec nat64) query;
+    getAssetDip721 : (nat64) -> (vec nat8) query;
     balanceOfDip721 : (user : principal) -> (nat64) query;
     ownerOfDip721 : (token_id : nat64) -> (OwnerResult) query;
     safeTransferFromDip721 : (from : principal, to : principal, token_id : nat64) -> (TxReceipt);

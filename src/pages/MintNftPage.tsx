@@ -1,34 +1,71 @@
-/* Сторінка мінту NFT: Інтерфейс для створення нових NFT (якщо це передбачено функціоналом вашого бекенду). */
-
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState } from 'react';
 import '../styles/mintNftPage.css';
-//import { backend } from '../declarations/backend'; // Make sure this is typed properly
+import { Principal } from '@dfinity/principal';
+import { getActor } from '../declarations'; // ✅ points to declarations/index.js
+import type { MetadataPart } from "../declarations/dip721_nft_container.did";
 
-// import { Principal } from "@dfinity/principal";
 
 const MintNftPage: React.FC = () => {
-  const [name, setName] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [asset, setAsset] = useState<File | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
 
-  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
+  // Hardcoded test principal (replace with Plug later or use your own dev ID)
+  const recipient = Principal.fromText("565ec-3m77y-baush-ctl56-fov37-67wgb-ikzsx-h5xdb-7qo74-njlng-kae");
+
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
   };
 
-  const handleDescriptionChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(event.target.value);
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value);
   };
 
-  const handleAssetChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    setAsset(file || null);
+  const handleAssetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setAsset(file);
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // In a real application, send data to your backend
-    console.log('Minting NFT with data:', { name, description, asset });
-    alert('NFT minting initiated (this is a placeholder)');
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus('Minting NFT...');
+
+    try {
+      const actor = await getActor();
+
+      let assetBytes = new Uint8Array([]);
+      if (asset) {
+        const buffer = await asset.arrayBuffer();
+        assetBytes = new Uint8Array(buffer);
+      }
+
+      const metadata: MetadataPart[] = [
+        {
+          data: assetBytes,
+          key_val_data: [
+            ["name", { TextContent: name }],
+            ["description", { TextContent: description }]
+          ],
+          purpose: { Rendered: null },
+        },
+      ];
+      
+      
+
+      const result = await actor.mintDip721(recipient, metadata, assetBytes);
+
+
+      if ('Ok' in result) {
+        setStatus(`✅ Minted successfully! Token ID: ${result.Ok.token_id.toString()}`);
+      } else {
+        setStatus(`❌ Mint failed: ${JSON.stringify(result.Err)}`);
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus('❌ Mint failed due to unexpected error.');
+    }
   };
 
   return (
@@ -40,33 +77,17 @@ const MintNftPage: React.FC = () => {
       <form onSubmit={handleSubmit} className="max-w-sm mx-auto bg-white p-8 rounded-md">
         <div className="form-group">
           <label htmlFor="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={handleNameChange}
-            required
-          />
+          <input type="text" id="name" value={name} onChange={handleNameChange} required />
         </div>
 
         <div className="form-group">
           <label htmlFor="description">Description:</label>
-          <textarea
-            id="description"
-            value={description}
-            onChange={handleDescriptionChange}
-          />
+          <textarea id="description" value={description} onChange={handleDescriptionChange} />
         </div>
 
         <div className="form-group">
-          <label htmlFor="asset">Asset (Image, Audio, Video):</label>
-          <input
-            type="file"
-            id="asset"
-            onChange={handleAssetChange}
-            accept="image/*,audio/*,video/*"
-            required
-          />
+          <label htmlFor="asset">Upload File:</label>
+          <input type="file" id="asset" onChange={handleAssetChange} />
         </div>
 
         <button
@@ -75,6 +96,8 @@ const MintNftPage: React.FC = () => {
         >
           Mint NFT
         </button>
+
+        {status && <p className="mt-4 font-mono text-sm">{status}</p>}
       </form>
     </div>
   );

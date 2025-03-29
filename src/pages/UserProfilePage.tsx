@@ -122,11 +122,10 @@ const UserProfilePage: React.FC = () => {
   return (
     <div className="user-profile-page">
       <div className="profile-header">
-        <img src={user.profilePicture} alt={user.username} className="profile-picture" />
-        <h1>{user.username}</h1>
+        
         <button onClick={handleLogout}>Log out</button>
       </div>
-      {principal ? <p>Your Principal: {principal.toString()}</p> : <p>Not authorised</p>}
+      {principal ? <h1>Your Principal: {principal.toString()}</h1> : <h1>Not authorised</h1>}
 
 
       <section className="owned-nfts">

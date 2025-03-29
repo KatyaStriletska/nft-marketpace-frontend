@@ -108,8 +108,28 @@ const NftDetailsPage: React.FC = () => {
   }
   const buyNft = async () =>{
     console.log("buyNft");
+    console.log("id", id);
+    console.log("nft", nft.id);
     const actor = await getActor();
-    const res = await actor.buyNFT(nft.id);
+    if(id){
+       try {
+      const result = await actor.buyNFT(BigInt(id));
+      console.log("Transaction successful:", result);
+    } catch (error) {
+        console.error("Transaction failed:", error);
+    }
+    const nftResult = await actor.getNftByIdDip721(BigInt(id));
+
+    if (nftResult.length === 0) {
+      setError(`NFT з ID ${id} не знайдено`);
+      setLoading(false);
+      return;
+    }
+
+    const nft = nftResult[0];
+    console.log(nft);
+    }
+   
   }
   return (
     <div className="nft-details-page">

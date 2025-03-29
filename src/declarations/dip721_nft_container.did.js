@@ -33,17 +33,18 @@ export const idlFactory = ({ IDL }) => {
     'purpose' : MetadataPurpose,
   });
   const MetadataDesc = IDL.Vec(MetadataPart);
-  const MetadataResult = IDL.Variant({ 'Ok' : MetadataDesc, 'Err' : ApiError });
-  const ExtendedMetadataResult = IDL.Record({
-    'token_id' : IDL.Nat64,
-    'metadata_desc' : MetadataDesc,
-  });
   const Nft = IDL.Record({
     'id' : IDL.Nat64,
     'content' : IDL.Vec(IDL.Nat8),
     'owner' : IDL.Principal,
     'metadata' : MetadataDesc,
     'approved' : IDL.Opt(IDL.Principal),
+    'price' : IDL.Opt(IDL.Nat64),
+  });
+  const MetadataResult = IDL.Variant({ 'Ok' : MetadataDesc, 'Err' : ApiError });
+  const ExtendedMetadataResult = IDL.Record({
+    'token_id' : IDL.Nat64,
+    'metadata_desc' : MetadataDesc,
   });
   const HttpRequest = IDL.Record({
     'url' : IDL.Text,
@@ -73,8 +74,11 @@ export const idlFactory = ({ IDL }) => {
     'approveDip721' : IDL.Func([IDL.Principal, IDL.Nat64], [TxReceipt], []),
     'balanceOfDip721' : IDL.Func([IDL.Principal], [IDL.Nat64], ['query']),
     'burnDip721' : IDL.Func([IDL.Nat64], [TxReceipt], []),
+    'buyNFT' : IDL.Func([IDL.Nat], [TxReceipt], []),
+    'getAllNFTs' : IDL.Func([], [IDL.Vec(Nft)], ['query']),
     'getApprovedDip721' : IDL.Func([IDL.Nat64], [TxReceipt], ['query']),
     'getAssetDip721' : IDL.Func([IDL.Nat64], [IDL.Vec(IDL.Nat8)], ['query']),
+    'getAvailableNFTs' : IDL.Func([], [IDL.Vec(Nft)], ['query']),
     'getMetadataDip721' : IDL.Func([IDL.Nat64], [MetadataResult], ['query']),
     'getMetdataForUserDip721' : IDL.Func(
         [IDL.Principal],
@@ -85,9 +89,14 @@ export const idlFactory = ({ IDL }) => {
     'http_request' : IDL.Func([HttpRequest], [HttpResponse], ['query']),
     'isApprovedForAllDip721' : IDL.Func([IDL.Principal], [IDL.Bool], ['query']),
     'is_custodian' : IDL.Func([IDL.Principal], [IDL.Bool], ['query']),
+    'listNFTForSale' : IDL.Func(
+        [IDL.Nat64, IDL.Nat64],
+        [IDL.Variant({ 'ok' : IDL.Nat64, 'err' : IDL.Text })],
+        [],
+      ),
     'logoDip721' : IDL.Func([], [LogoResult], ['query']),
     'mintDip721' : IDL.Func(
-        [IDL.Principal, MetadataDesc, IDL.Vec(IDL.Nat8)],
+        [IDL.Principal, MetadataDesc, IDL.Vec(IDL.Nat8), IDL.Nat64],
         [MintReceipt],
         [],
       ),

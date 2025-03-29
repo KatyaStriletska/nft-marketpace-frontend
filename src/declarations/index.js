@@ -2,7 +2,7 @@ import { Actor, HttpAgent } from "@dfinity/agent";
 import { idlFactory } from "./dip721_nft_container.did.js";
 export { idlFactory } from "./dip721_nft_container.did.js";
 
-export const canisterId = "avqkn-guaaa-aaaaa-qaaea-cai";
+export const canisterId = "l75es-sqaaa-aaaai-atgqa-cai";
 
 /**
  * Create an actor with optional agent options.
@@ -14,7 +14,7 @@ export const createActor = async (canisterId, options = {}) => {
   const agent =
     options.agent ||
     new HttpAgent({
-      host: "http://127.0.0.1:4943",
+      host: "https://ic0.app", // Використовуємо IC Mainnet
       ...options.agentOptions,
     });
 
@@ -24,8 +24,8 @@ export const createActor = async (canisterId, options = {}) => {
     );
   }
 
-  // Only fetch root key in development
-  if (process.env.DFX_NETWORK !== "ic") {
+  // ТІЛЬКИ В DEV-MODE МОЖНА ВИКЛИКАТИ fetchRootKey()
+  if (process.env.DFX_NETWORK !== "ic" && process.env.NODE_ENV !== "production") {
     try {
       await agent.fetchRootKey();
     } catch (err) {

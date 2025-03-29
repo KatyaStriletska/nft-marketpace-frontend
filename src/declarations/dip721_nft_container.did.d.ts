@@ -62,6 +62,7 @@ export interface Nft {
   'owner' : Principal,
   'metadata' : MetadataDesc,
   'approved' : [] | [Principal],
+  'price' : [] | [bigint],
 }
 export type OwnerResult = { 'Ok' : Principal } |
   { 'Err' : ApiError };
@@ -91,8 +92,11 @@ export interface _SERVICE {
   'approveDip721' : ActorMethod<[Principal, bigint], TxReceipt>,
   'balanceOfDip721' : ActorMethod<[Principal], bigint>,
   'burnDip721' : ActorMethod<[bigint], TxReceipt>,
+  'buyNFT' : ActorMethod<[bigint], TxReceipt>,
+  'getAllNFTs' : ActorMethod<[], Array<Nft>>,
   'getApprovedDip721' : ActorMethod<[bigint], TxReceipt>,
   'getAssetDip721' : ActorMethod<[bigint], Uint8Array | number[]>,
+  'getAvailableNFTs' : ActorMethod<[], Array<Nft>>,
   'getMetadataDip721' : ActorMethod<[bigint], MetadataResult>,
   'getMetdataForUserDip721' : ActorMethod<
     [Principal],
@@ -102,9 +106,14 @@ export interface _SERVICE {
   'http_request' : ActorMethod<[HttpRequest], HttpResponse>,
   'isApprovedForAllDip721' : ActorMethod<[Principal], boolean>,
   'is_custodian' : ActorMethod<[Principal], boolean>,
+  'listNFTForSale' : ActorMethod<
+    [bigint, bigint],
+    { 'ok' : bigint } |
+      { 'err' : string }
+  >,
   'logoDip721' : ActorMethod<[], LogoResult>,
   'mintDip721' : ActorMethod<
-    [Principal, MetadataDesc, Uint8Array | number[]],
+    [Principal, MetadataDesc, Uint8Array | number[], bigint],
     MintReceipt
   >,
   'nameDip721' : ActorMethod<[], string>,

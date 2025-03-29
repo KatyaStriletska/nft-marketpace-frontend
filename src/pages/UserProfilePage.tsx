@@ -28,7 +28,6 @@ interface HistoryItem {
   price: string;
 }
 
-const principal = Principal.fromText('w3ek4-dpcyk-w6bpo-ixbku-mr2zs-szjqo-kkxob-fz4se-y7brs-u72cj-rae');
 
 const UserProfilePage: React.FC = () => {
   const [user] = useState<User>({
@@ -48,12 +47,26 @@ const UserProfilePage: React.FC = () => {
   const [saleHistory] = useState<HistoryItem[]>([
     { id: 201, nftName: 'Old Kitty #3', date: '2024-03-10', price: '0.08 ICP' },
   ]);
+  const [principal, setPrincipal] = useState<Principal | null>(null);
+  useEffect(() => {
+    const storedPrincipal = localStorage.getItem("userPrincipal");
+    console.log("Stored Principal:", storedPrincipal);
+    if (storedPrincipal) {
+      
+      setPrincipal(Principal.fromText(storedPrincipal));
+      console.log(principal)
+    }
+    // setPrincipal(Principal.fromText(storedPrincipal));
+  }, []);
 
   useEffect(() => {
     const loadNFTs = async () => {
       try {
         const actor = await getActor();
-        console.log("Actor:", actor);
+        if (principal === null) {
+          console.error("Principal is null");
+          return;
+        }
         const tokenIds: bigint[] = Array.from(await actor.tokensOfOwnerDip721(principal));
         const fetchedNFTs: OwnedNft[] = await Promise.all(
           tokenIds.map(async (id) => {
@@ -95,7 +108,7 @@ const UserProfilePage: React.FC = () => {
     };
   
     loadNFTs();
-  }, []);
+  }, [principal]);
   
 
   return (
@@ -103,8 +116,10 @@ const UserProfilePage: React.FC = () => {
       <div className="profile-header">
         <img src={user.profilePicture} alt={user.username} className="profile-picture" />
         <h1>{user.username}</h1>
-        <button>Edit Profile</button>
+        <button onClick={() => localStorage.removeItem("userPrincipal")}>Log out</button>
       </div>
+      {principal ? <p>Ваш Principal: {principal.toString()}</p> : <p>Не авторизовано</p>}
+
 
       <section className="owned-nfts">
         <h2>My NFTs</h2>

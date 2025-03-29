@@ -16,7 +16,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Components
 import NavBar from './components/NavBar';
-//import NavigationBar from './components/NavigationBar';
 
 import './App.css';
 import './index.css';

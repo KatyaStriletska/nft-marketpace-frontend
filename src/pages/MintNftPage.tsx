@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/mintNftPage.css';
 import { Principal } from '@dfinity/principal';
-import { getActor } from '../declarations'; // ✅ points to declarations/index.js
+import { AuthClient } from "@dfinity/auth-client";
+
+import { getActor } from '../declarations';
+
 import type { MetadataPart } from "../declarations/dip721_nft_container.did";
 import Button  from 'react-bootstrap/Button';
 
@@ -10,9 +13,42 @@ const MintNftPage: React.FC = () => {
   const [description, setDescription] = useState('');
   const [asset, setAsset] = useState<File | null>(null);
   const [status, setStatus] = useState<string | null>(null);
+  const [price, setPrice] = useState<bigint | null>(null);
+  const [userPrincipal, setUserPrincipal] = useState<Principal | null>(null);
 
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
+  const checkLoginStatus = async () => {
+    const authClient = await AuthClient.create();
+    if (await authClient.isAuthenticated()) {
+      const identity = authClient.getIdentity();
+      const principal = identity.getPrincipal().toString();
+      localStorage.setItem("userPrincipal", principal);
+
+      setUserPrincipal(identity.getPrincipal());
+    }
+  };
+
+  const handleLogin = async () => {
+    const authClient = await AuthClient.create();
+    await authClient.login({
+      identityProvider: "https://identity.ic0.app",
+      onSuccess: async () => {
+        const identity = authClient.getIdentity();
+        setUserPrincipal(identity.getPrincipal());
+      },
+      onError: (err) => console.error("Login failed:", err),
+    });
+  };
+  const handleLogout = async () => {
+    const authClient = await AuthClient.create();
+    await authClient.logout();
+    setUserPrincipal(null);
+  };
   // Hardcoded test principal (replace with Plug later or use your own dev ID)
-  const recipient = Principal.fromText("w3ek4-dpcyk-w6bpo-ixbku-mr2zs-szjqo-kkxob-fz4se-y7brs-u72cj-rae");
+  // const recipient = Principal.fromText("w3ek4-dpcyk-w6bpo-ixbku-mr2zs-szjqo-kkxob-fz4se-y7brs-u72cj-rae");
 
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,9 +63,21 @@ const MintNftPage: React.FC = () => {
     const file = e.target.files?.[0] || null;
     setAsset(file);
   };
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value) {
+      setPrice(BigInt(value));
+    } else {
+      setPrice(null);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!userPrincipal) {
+      setStatus("❌ Please log in first!");
+      return;
+    }
     setStatus('Minting NFT...');
 
     try {
@@ -54,7 +102,7 @@ const MintNftPage: React.FC = () => {
       
       
 
-      const result = await actor.mintDip721(recipient, metadata, assetBytes);
+      const result = await actor.mintDip721(userPrincipal, metadata, assetBytes, price ?? BigInt(0));
 
 
       if ('Ok' in result) {
@@ -72,6 +120,24 @@ const MintNftPage: React.FC = () => {
       <div className="flex justify-center mt-7">
         <h1 className="text-4xl font-extrabold">Mint New NFT</h1>
       </div>
+      <div className="mt-7">
+        <h1 className="text-4xl font-extrabold">Mint New NFT</h1>
+      </div>
+
+      <div className="my-4">
+        {userPrincipal ? (
+          <div>
+            <p>✅ Logged in as: {userPrincipal.toText()}</p>
+            <button className="btn btn-danger" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
+        ) : (
+          <button className="btn btn-primary" onClick={handleLogin}>
+            Login with Internet Identity
+          </button>
+        )}
+      </div>
       <form onSubmit={handleSubmit} className="max-w-sm mx-auto bg-white p-8 rounded-md" style={{ padding: '40px', borderRadius: '19px' }}>
         <div className="form-group">
           <label htmlFor="name">Name:</label>
@@ -86,6 +152,10 @@ const MintNftPage: React.FC = () => {
         <div className="form-group">
           <label htmlFor="asset">Upload File:</label>
           <input type="file" id="asset" onChange={handleAssetChange} />
+        </div>
+        <div className="form-group">
+          <label htmlFor="price">Price:</label>
+          <input type="number" id="price" onChange={handlePriceChange} />
         </div>
         <button
           type="submit"

@@ -118,11 +118,12 @@ const MintNftPage: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: "column", alignContent: "space-around", justifyContent: "space-evenly", alignItems: "center" }}>
       <div className="flex justify-center mt-7">
-        <h1 className="text-4xl font-extrabold">Mint New NFT</h1>
-      </div>
-      <div className="mt-7">
-        <h1 className="text-4xl font-extrabold">Mint New NFT</h1>
-      </div>
+  <h1 className="text-4xl font-extrabold text-white" style={{ textShadow: '0 0 10px #00e676' }}>
+    Mint New NFT
+  </h1>
+</div>
+
+      
 
       <div className="my-4">
         {userPrincipal ? (
@@ -159,12 +160,13 @@ const MintNftPage: React.FC = () => {
         </div>
         <button
           type="submit"
-          // onClick={() => handleSubmit}
-          className="max-w-sm mx-auto btn btn-secondary btn-lg" 
-          style={{ backgroundColor: 'rgb(0 0 0 / 36%)', width: "26rem"}}
+          className="btn btn-primary btn-lg"
+          style={{ width: "26rem" }}
         >
           Mint NFT
         </button>
+
+
         {status && <p className="mt-4 font-mono text-sm">{status}</p>}
       </form>
   

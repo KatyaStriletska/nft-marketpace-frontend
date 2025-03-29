@@ -3,7 +3,7 @@ import '../styles/mintNftPage.css';
 import { Principal } from '@dfinity/principal';
 import { getActor } from '../declarations'; // ✅ points to declarations/index.js
 import type { MetadataPart } from "../declarations/dip721_nft_container.did";
-
+import Button  from 'react-bootstrap/Button';
 
 const MintNftPage: React.FC = () => {
   const [name, setName] = useState('');
@@ -12,7 +12,7 @@ const MintNftPage: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
 
   // Hardcoded test principal (replace with Plug later or use your own dev ID)
-  const recipient = Principal.fromText("565ec-3m77y-baush-ctl56-fov37-67wgb-ikzsx-h5xdb-7qo74-njlng-kae");
+  const recipient = Principal.fromText("w3ek4-dpcyk-w6bpo-ixbku-mr2zs-szjqo-kkxob-fz4se-y7brs-u72cj-rae");
 
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,40 +67,39 @@ const MintNftPage: React.FC = () => {
       setStatus('❌ Mint failed due to unexpected error.');
     }
   };
-
   return (
-    <div className="mint-nft-page">
+    <div style={{ display: 'flex', flexDirection: "column", alignContent: "space-around", justifyContent: "space-evenly", alignItems: "center" }}>
       <div className="flex justify-center mt-7">
         <h1 className="text-4xl font-extrabold">Mint New NFT</h1>
       </div>
-
-      <form onSubmit={handleSubmit} className="max-w-sm mx-auto bg-white p-8 rounded-md">
+      <form onSubmit={handleSubmit} className="max-w-sm mx-auto bg-white p-8 rounded-md" style={{ padding: '40px', borderRadius: '19px' }}>
         <div className="form-group">
           <label htmlFor="name">Name:</label>
           <input type="text" id="name" value={name} onChange={handleNameChange} required />
         </div>
-
+  
         <div className="form-group">
           <label htmlFor="description">Description:</label>
           <textarea id="description" value={description} onChange={handleDescriptionChange} />
         </div>
-
+  
         <div className="form-group">
           <label htmlFor="asset">Upload File:</label>
           <input type="file" id="asset" onChange={handleAssetChange} />
         </div>
-
         <button
           type="submit"
-          className="text-white bg-gray-800 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+          // onClick={() => handleSubmit}
+          className="max-w-sm mx-auto btn btn-secondary btn-lg" 
+          style={{ backgroundColor: 'rgb(0 0 0 / 36%)', width: "26rem"}}
         >
           Mint NFT
         </button>
-
         {status && <p className="mt-4 font-mono text-sm">{status}</p>}
       </form>
+  
+      
     </div>
   );
 };
-
-export default MintNftPage;
+export default MintNftPage;  

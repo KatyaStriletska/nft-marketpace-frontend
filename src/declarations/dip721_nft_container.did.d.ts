@@ -56,6 +56,13 @@ export type MetadataVal = { 'Nat64Content' : bigint } |
   { 'TextContent' : string };
 export type MintReceipt = { 'Ok' : { 'id' : bigint, 'token_id' : bigint } } |
   { 'Err' : { 'Unauthorized' : null } };
+export interface Nft {
+  'id' : bigint,
+  'content' : Uint8Array | number[],
+  'owner' : Principal,
+  'metadata' : MetadataDesc,
+  'approved' : [] | [Principal],
+}
 export type OwnerResult = { 'Ok' : Principal } |
   { 'Err' : ApiError };
 export type TransactionType = {
@@ -91,6 +98,7 @@ export interface _SERVICE {
     [Principal],
     Array<ExtendedMetadataResult>
   >,
+  'getNftByIdDip721' : ActorMethod<[bigint], [] | [Nft]>,
   'http_request' : ActorMethod<[HttpRequest], HttpResponse>,
   'isApprovedForAllDip721' : ActorMethod<[Principal], boolean>,
   'is_custodian' : ActorMethod<[Principal], boolean>,

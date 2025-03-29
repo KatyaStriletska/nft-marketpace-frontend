@@ -55,7 +55,9 @@ const HomePage: React.FC = () => {
   return (
     <div className="home-page">
       <section className="popular-nfts">
-        <h2 className="text-4xl font-extrabold">Popular NFTs</h2>
+        <div className="nfts-header">
+          <h2 className="text-4xl font-extrabold ">Popular NFTs</h2>
+        </div>
         <div className="nft-list">
           {popularNFTs.map((nft) => (
             <div key={nft.id} className="nft-card">
@@ -69,7 +71,9 @@ const HomePage: React.FC = () => {
       </section>
 
       <section className="new-arrivals">
-        <h2 className="text-4xl font-extrabold">New Arrivals</h2>
+        <div className='nfts-header'>
+          <h2 className="text-4xl font-extrabold">New Arrivals</h2>
+        </div>
         <div className="nft-list">
           {newArrivals.map((nft) => (
             <div key={nft.id} className="nft-card">
@@ -82,14 +86,14 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      <section className="categories">
+      {/* <section className="categories">
         <h2>Categories</h2>
         <ul className="category-list">
           {categories.map((category) => (
             <li key={category}>{category}</li>
           ))}
         </ul>
-      </section>
+      </section> */}
     </div>
   );
 };

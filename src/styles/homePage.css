@@ -5,6 +5,16 @@
   
   .popular-nfts, .new-arrivals, .categories {
     margin-bottom: 30px;
+    /* display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; */
+  }
+  .nfts-header{
+    margin: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .nft-list {

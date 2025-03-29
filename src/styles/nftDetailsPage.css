@@ -1,13 +1,23 @@
 
 .nft-details-page {
     padding: 20px;
+    
   }
+.nft-details-page-container {
+  padding: 50px;
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-content: space-around;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.36);}
   
   .nft-image {
     max-width: 400px;
     height: auto;
     border-radius: 8px;
-    margin-bottom: 20px;
+    margin: 20px;
   }
   
   .nft-description {

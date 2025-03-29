@@ -11,6 +11,8 @@ import SellNftPage from './pages/SellNftPage';
 import BuyNftPage from './pages/BuyNftPage';
 import TradeNftPage from './pages/TradeNftPage';
 import ConnectWalletPage from './pages/ConnectWalletPage';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 // Components
 import NavBar from './components/NavBar';

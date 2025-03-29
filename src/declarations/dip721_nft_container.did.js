@@ -38,6 +38,13 @@ export const idlFactory = ({ IDL }) => {
     'token_id' : IDL.Nat64,
     'metadata_desc' : MetadataDesc,
   });
+  const Nft = IDL.Record({
+    'id' : IDL.Nat64,
+    'content' : IDL.Vec(IDL.Nat8),
+    'owner' : IDL.Principal,
+    'metadata' : MetadataDesc,
+    'approved' : IDL.Opt(IDL.Principal),
+  });
   const HttpRequest = IDL.Record({
     'url' : IDL.Text,
     'method' : IDL.Text,
@@ -74,6 +81,7 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(ExtendedMetadataResult)],
         [],
       ),
+    'getNftByIdDip721' : IDL.Func([IDL.Nat64], [IDL.Opt(Nft)], ['query']),
     'http_request' : IDL.Func([HttpRequest], [HttpResponse], ['query']),
     'isApprovedForAllDip721' : IDL.Func([IDL.Principal], [IDL.Bool], ['query']),
     'is_custodian' : IDL.Func([IDL.Principal], [IDL.Bool], ['query']),

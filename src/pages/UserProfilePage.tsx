@@ -28,7 +28,7 @@ interface HistoryItem {
   price: string;
 }
 
-const principal = Principal.fromText('565ec-3m77y-baush-ctl56-fov37-67wgb-ikzsx-h5xdb-7qo74-njlng-kae');
+const principal = Principal.fromText('w3ek4-dpcyk-w6bpo-ixbku-mr2zs-szjqo-kkxob-fz4se-y7brs-u72cj-rae');
 
 const UserProfilePage: React.FC = () => {
   const [user] = useState<User>({

@@ -2,7 +2,7 @@ import { Actor, HttpAgent } from "@dfinity/agent";
 import { idlFactory } from "./dip721_nft_container.did.js";
 export { idlFactory } from "./dip721_nft_container.did.js";
 
-export const canisterId = "asrmz-lmaaa-aaaaa-qaaeq-cai";
+export const canisterId = "avqkn-guaaa-aaaaa-qaaea-cai";
 
 /**
  * Create an actor with optional agent options.

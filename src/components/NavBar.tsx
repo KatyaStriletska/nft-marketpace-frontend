@@ -24,7 +24,6 @@ const navigation: NavItem[] = [
   { name: 'All NFTs', href: '/nfts' },
   { name: 'Mint NFT', href: '/mint' },
   { name: 'Sell NFT', href: '/sell' },
-  { name: 'Connect Wallet', href: '/connect-wallet' },
   // { name: 'Profile', href: '/profile' },
 ];
 
@@ -61,7 +60,7 @@ const NavigationBar: React.FC = () => {
 };
 return (
     <nav className="navbar navbar-light" style={{ backgroundColor: 'rgb(0 0 0 / 36%)' }}>
-      <a className="navbar-brand px-4 fw-bold fs-2 text-uppercase" href="/">
+      <a className="navbar-brand px-4 fw-bold fs-2 text-uppercase" href="/" style={{ color: 'white' }}>
         NFT-Marketplace
       </a>
 

@@ -115,6 +115,28 @@ const HomePage: React.FC = () => {
             </div>
           )}
         </section>
+        
+      <section className="owned-nfts">
+        <h2 className="text-4xl font-extrabold text-white" style={{ textShadow: '0 0 10px #00e676' }}>My NFTs</h2>
+        {loadingNFTs ? (
+          <p>Loading NFTs...</p>
+        ) : (
+          <div className="nft-list">
+            {nfts.length === 0 ? (
+              <p>No NFTs yet.</p>
+            ) : (
+              nfts.map((nft) => (
+                <div key={nft.id} className="nft-card">
+                  <img src={nft.imageUrl} alt={nft.name} />
+                  <h3>{nft.name}</h3>
+                  <p>Price: {nft.price}</p>
+                  <Link to={`/nft/${nft.id}`}>View</Link>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+      </section>
       </section>
     </div>
   );

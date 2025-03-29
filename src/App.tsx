@@ -10,7 +10,7 @@ import MintNftPage from './pages/MintNftPage';
 import SellNftPage from './pages/SellNftPage';
 import BuyNftPage from './pages/BuyNftPage';
 import TradeNftPage from './pages/TradeNftPage';
-import ConnectWalletPage from './pages/ConnectWalletPage';
+//import ConnectWalletPage from './pages/ConnectWalletPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -36,7 +36,7 @@ const App: React.FC = () => {
           <Route path="/sell" element={<SellNftPage />} />
           <Route path="/buy/:id" element={<BuyNftPage />} /> {/* :id is NFT identifier */}
           <Route path="/trade/:id" element={<TradeNftPage />} /> {/* :id is NFT identifier */}
-          <Route path="/connect-wallet" element={<ConnectWalletPage />} />
+         
         </Routes>
       </div>
     </Router>

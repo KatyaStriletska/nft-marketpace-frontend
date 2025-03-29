@@ -114,16 +114,18 @@ const NftDetailsPage: React.FC = () => {
   return (
     <div className="nft-details-page">
       <div className='nft-details-page-container'>
-        <h1>{nft.name}</h1>
+        <h1 className="text-4xl font-extrabold text-white" style={{ textShadow: '0 0 10px #00e676' }}>
+          {nft.name}
+        </h1>
         <img src={nft.imageUrl} alt={nft.name} className="nft-image" />
-        <p className="nft-description">{nft.description}</p>
+        <p className="nft-description text-white">{nft.description}</p>
 
-        <div className="nft-owner">
+        <div className="nft-owner text-white">
           <strong>Owner:</strong> {nft.owner}
         </div>
 
         {nft.price && (
-          <div className="nft-price">
+          <div className="nft-price text-white">
             <strong>Price:</strong> {nft.price}
           </div>
         )}
@@ -136,10 +138,10 @@ const NftDetailsPage: React.FC = () => {
 
         {nft.transactionHistory.length > 0 && (
           <div className="nft-history">
-            <h2>Transaction History</h2>
+            <h2 className="text-white">Transaction History</h2>
             <ul>
               {nft.transactionHistory.map((transaction, index) => (
-                <li key={index}>{transaction}</li>
+                <li key={index} className="text-white">{transaction}</li>
               ))}
             </ul>
           </div>

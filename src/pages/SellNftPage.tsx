@@ -35,19 +35,20 @@ const SellNftPage: React.FC = () => {
 
   return (
     <div className="sell-nft-page">
-      <h1>Sell Your NFT</h1>
+      <h1 className="text-4xl font-extrabold text-white" style={{ textShadow: '0 0 10px #00e676' }}>Sell Your NFT</h1>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="nft">Select NFT to Sell:</label>
+          <label htmlFor="nft" className="text-white">Select NFT to Sell:</label>
           <select
             id="nft"
             value={selectedNftId}
             onChange={handleNftChange}
             required
+            className="bg-transparent text-white border border-white p-2"
           >
-            <option value="">-- Select an NFT --</option>
+            <option value="">Select an NFT</option>
             {ownedNFTs.map((nft) => (
-              <option key={nft.id} value={nft.id.toString()}>
+              <option key={nft.id} value={nft.id.toString()} className="text-black">
                 {nft.name} (ID: {nft.id})
               </option>
             ))}
@@ -55,7 +56,7 @@ const SellNftPage: React.FC = () => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="price">Price (in ICP):</label>
+          <label htmlFor="price" className="text-white">Price (in ICP):</label>
           <input
             type="number"
             id="price"
@@ -64,10 +65,14 @@ const SellNftPage: React.FC = () => {
             min="0.001"
             step="0.001"
             required
+            className="bg-transparent text-white border border-white p-2"
           />
         </div>
 
-        <button type="submit">List NFT for Sale</button>
+        <button type="submit" className="btn" style={{ backgroundColor: '#27C932', color: 'black' }}>
+         List NFT for Sale
+        </button>
+
       </form>
     </div>
   );

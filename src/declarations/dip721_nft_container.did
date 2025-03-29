@@ -29,6 +29,8 @@ type Nft = record {
     id: nat64;
     metadata: MetadataDesc;
     content: blob;
+    price : opt nat64;
+
 };
 type ExtendedMetadataResult = record {
     metadata_desc : MetadataDesc;
@@ -133,6 +135,10 @@ type HttpResponse = record {
 };
 
 service : (InitArgs) -> {
+    getAllNFTs : () -> (vec Nft) query;
+    listNFTForSale : (nat64, nat64) -> (variant { ok : nat64; err : text });
+    getAvailableNFTs : () -> (vec Nft) query;
+    buyNFT : (nat64) -> (TxReceipt);
     getNftByIdDip721: (nat64) -> (opt Nft) query;
     tokensOfOwnerDip721 : (principal) -> (vec nat64) query;
     getAssetDip721 : (nat64) -> (vec nat8) query;
@@ -153,7 +159,7 @@ service : (InitArgs) -> {
     setApprovalForAllDip721 : (operator : principal, isApproved : bool) -> (TxReceipt);
     getApprovedDip721 : (token_id : nat64) -> (TxReceipt) query;
     isApprovedForAllDip721 : (operator : principal) -> (bool) query;
-    mintDip721 : (to : principal, metadata : MetadataDesc, blobContent : blob) -> (MintReceipt);
+    mintDip721 : (to : principal, metadata : MetadataDesc, blobContent : blob,  price: nat64) -> (MintReceipt);
     burnDip721 : (token_id : nat64) -> (TxReceipt);
 
     set_name : (name : text) -> (ManageResult);

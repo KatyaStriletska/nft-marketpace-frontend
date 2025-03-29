@@ -74,7 +74,7 @@ export const idlFactory = ({ IDL }) => {
     'approveDip721' : IDL.Func([IDL.Principal, IDL.Nat64], [TxReceipt], []),
     'balanceOfDip721' : IDL.Func([IDL.Principal], [IDL.Nat64], ['query']),
     'burnDip721' : IDL.Func([IDL.Nat64], [TxReceipt], []),
-    'buyNFT' : IDL.Func([IDL.Nat], [TxReceipt], []),
+    'buyNFT' : IDL.Func([IDL.Nat64], [TxReceipt], []),
     'getAllNFTs' : IDL.Func([], [IDL.Vec(Nft)], ['query']),
     'getApprovedDip721' : IDL.Func([IDL.Nat64], [TxReceipt], ['query']),
     'getAssetDip721' : IDL.Func([IDL.Nat64], [IDL.Vec(IDL.Nat8)], ['query']),

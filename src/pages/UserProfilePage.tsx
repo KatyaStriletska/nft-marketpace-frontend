@@ -8,6 +8,7 @@ import type { MetadataPart } from '../declarations/dip721_nft_container.did.js';
 import '../styles/userProfilePage.css';
 //import { Principal } from '@dfinity/candid/lib/cjs/idl';
 import { Principal } from "@dfinity/principal";
+import { AuthClient } from '@dfinity/auth-client';
 
 interface User {
   username: string;
@@ -67,6 +68,9 @@ const UserProfilePage: React.FC = () => {
           console.error("Principal is null");
           return;
         }
+
+        
+
         const tokenIds: bigint[] = Array.from(await actor.tokensOfOwnerDip721(principal));
         const fetchedNFTs: OwnedNft[] = await Promise.all(
           tokenIds.map(async (id) => {
@@ -109,16 +113,20 @@ const UserProfilePage: React.FC = () => {
   
     loadNFTs();
   }, [principal]);
-  
+   const handleLogout = async () => {
+      const authClient = await AuthClient.create();
+      await authClient.logout();
+      setPrincipal(null);
+    };
 
   return (
     <div className="user-profile-page">
       <div className="profile-header">
         <img src={user.profilePicture} alt={user.username} className="profile-picture" />
         <h1>{user.username}</h1>
-        <button onClick={() => localStorage.removeItem("userPrincipal")}>Log out</button>
+        <button onClick={handleLogout}>Log out</button>
       </div>
-      {principal ? <p>Ваш Principal: {principal.toString()}</p> : <p>Не авторизовано</p>}
+      {principal ? <p>Your Principal: {principal.toString()}</p> : <p>Not authorised</p>}
 
 
       <section className="owned-nfts">
@@ -134,7 +142,7 @@ const UserProfilePage: React.FC = () => {
                 <div key={nft.id} className="nft-card">
                   <img src={nft.imageUrl} alt={nft.name} />
                   <h3>{nft.name}</h3>
-                  <p>Price: {nft.price}</p>
+                  {/* <p>Price: {nft.price}</p> */}
                   <Link to={`/nft/${nft.id}`}>View</Link>
                 </div>
               ))

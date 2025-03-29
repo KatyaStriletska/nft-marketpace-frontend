@@ -13,11 +13,14 @@ interface Nft {
 const HomePage: React.FC = () => {
   const [loadingNFTs, setLoadingNFTs] = useState(true);
   const [nfts, setNfts] = useState<Nft[]>([]);
+  const [nftsForSale, setNftsForSale] = useState<Nft[]>([]);
 
   const GETnfts = async () => {
     try {
       const actor = await getActor();
       const result = await actor.getAllNFTs(); 
+      const availableNfts = await actor.getAvailableNFTs();
+      console.log('Available NFTs:', availableNfts);
 
       if (Array.isArray(result)) {
         const nftData = result; 
@@ -34,6 +37,23 @@ const HomePage: React.FC = () => {
         });
 
         setNfts(formattedNFTs);
+      } else {
+        console.error('Error fetching NFTs:');
+      }
+      if (Array.isArray(availableNfts)) {
+        const formattedNFTs = availableNfts.map((nft: any, index: number) => {
+          const metadata = nft.metadata[0]; 
+          const imageUrl = URL.createObjectURL(new Blob([nft.content])); 
+
+          return {
+            id: index, 
+            name: metadata.key_val_data.find((item: any) => item[0] === 'name')?.[1]?.TextContent || 'Unknown',
+            imageUrl: imageUrl,
+            price: nft.price[0]?.toString() || '0 ICP',
+          };
+        });
+
+        setNftsForSale(formattedNFTs);
       } else {
         console.error('Error fetching NFTs:');
       }
@@ -64,6 +84,26 @@ const HomePage: React.FC = () => {
                 <p>No NFTs yet.</p>
               ) : (
                 nfts.map((nft) => (
+                  <div key={nft.id} className="nft-card">
+                    <img src={nft.imageUrl} alt={nft.name} />
+                    <h3>{nft.name}</h3>
+                    <Link to={`/nft/${nft.id}`}>View</Link>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </section>
+        <section className="owned-nfts">
+          <h2>NFT for Sale</h2>
+          {loadingNFTs ? (
+            <p>Loading NFTs...</p>
+          ) : (
+            <div className="nft-list">
+              {nftsForSale.length === 0 ? (
+                <p>No NFTs yet.</p>
+              ) : (
+                nftsForSale.map((nft) => (
                   <div key={nft.id} className="nft-card">
                     <img src={nft.imageUrl} alt={nft.name} />
                     <h3>{nft.name}</h3>

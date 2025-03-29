@@ -63,9 +63,10 @@ const NftDetailsPage: React.FC = () => {
         if (historyEntry && "TextContent" in historyEntry[1]) {
           transactionHistory = historyEntry[1].TextContent.split(';'); // Припустимо, що транзакції розділені крапкою з комою
         }
-      } else {
-        console.error("Помилка отримання метаданих:", nft.metadata);
       }
+      //  else {
+      //   console.error("Помилка отримання метаданих:", nft.metadata);
+      // }
 
       // Встановлення стану NFT
       setNft({
@@ -105,7 +106,11 @@ const NftDetailsPage: React.FC = () => {
   if (!nft) {
     return <div>NFT not found.</div>;
   }
-
+  const buyNft = async () =>{
+    console.log("buyNft");
+    const actor = await getActor();
+    const res = await actor.buyNFT(nft.id);
+  }
   return (
     <div className="nft-details-page">
       <div className='nft-details-page-container'>
@@ -124,7 +129,7 @@ const NftDetailsPage: React.FC = () => {
         )}
 
         <div className="nft-actions">
-          <button onClick={() => alert('Buy action triggered')}>Buy</button>
+          <button onClick={buyNft}>Buy</button>
           <button onClick={() => alert('Sell action triggered')}>Sell</button>
           <button onClick={() => alert('Trade action triggered')}>Trade</button>
         </div>

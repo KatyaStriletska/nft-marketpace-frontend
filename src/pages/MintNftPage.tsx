@@ -2,11 +2,8 @@ import React, { useEffect, useState } from 'react';
 import '../styles/mintNftPage.css';
 import { Principal } from '@dfinity/principal';
 import { AuthClient } from "@dfinity/auth-client";
-
 import { getActor } from '../declarations';
-
 import type { MetadataPart } from "../declarations/dip721_nft_container.did";
-import Button  from 'react-bootstrap/Button';
 
 const MintNftPage: React.FC = () => {
   const [name, setName] = useState('');
@@ -15,6 +12,7 @@ const MintNftPage: React.FC = () => {
   const [status, setStatus] = useState<string | null>(null);
   const [price, setPrice] = useState<bigint | null>(null);
   const [userPrincipal, setUserPrincipal] = useState<Principal | null>(null);
+  const [isForSale, setIsForSale] = useState(false);
 
   useEffect(() => {
     checkLoginStatus();
@@ -63,6 +61,13 @@ const MintNftPage: React.FC = () => {
     const file = e.target.files?.[0] || null;
     setAsset(file);
   };
+  const handleCheckboxChange = () => {
+    setIsForSale(!isForSale);
+    if (!isForSale) setPrice(null); 
+    console.log(price);
+    console.log(isForSale);
+
+  };
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (value) {
@@ -73,22 +78,20 @@ const MintNftPage: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log(price);
     e.preventDefault();
     if (!userPrincipal) {
       setStatus("❌ Please log in first!");
       return;
     }
     setStatus('Minting NFT...');
-
     try {
       const actor = await getActor();
-
       let assetBytes = new Uint8Array([]);
       if (asset) {
         const buffer = await asset.arrayBuffer();
         assetBytes = new Uint8Array(buffer);
       }
-
       const metadata: MetadataPart[] = [
         {
           data: assetBytes,
@@ -99,12 +102,7 @@ const MintNftPage: React.FC = () => {
           purpose: { Rendered: null },
         },
       ];
-      
-      
-
       const result = await actor.mintDip721(userPrincipal, metadata, assetBytes, price ?? BigInt(0));
-
-
       if ('Ok' in result) {
         setStatus(`✅ Minted successfully! Token ID: ${result.Ok.token_id.toString()}`);
       } else {
@@ -153,10 +151,26 @@ const MintNftPage: React.FC = () => {
           <label htmlFor="asset">Upload File:</label>
           <input type="file" id="asset" onChange={handleAssetChange} />
         </div>
-        <div className="form-group">
-          <label htmlFor="price">Price:</label>
-          <input type="number" id="price" onChange={handlePriceChange} />
-        </div>
+        <div className="form-check form-switch">
+        <label className="form-check-label fw-bold" id="flexSwitchCheckDefault" htmlFor="isForSale">Put up for sale</label>
+        <input
+          className="form-check-input bg-gray-700 border-gray-600"
+          type="checkbox"
+          id="isForSale"
+          checked={isForSale}
+          onChange={handleCheckboxChange}
+        />
+      </div>
+      <div className="form-group " style={{ display: isForSale ? 'block' : 'none' }}>
+        <label htmlFor="price">Price:</label>
+        <input
+
+          type="number"
+          id="price"
+          value={price !== null ? price.toString() : ''}
+          onChange={handlePriceChange}
+        />
+      </div>
         <button
           type="submit"
           // onClick={() => handleSubmit}

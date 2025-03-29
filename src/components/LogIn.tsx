@@ -48,33 +48,19 @@ const LogIn: React.FC = () => {
                 className="btn btn-primary"
                 onClick={() => modalRef.current && new Modal(modalRef.current).show()}
             >
-                Launch demo modal
+                Login with Internet Identity
             </button>
 
             <div ref={modalRef} className="modal fade" id="exampleModal" tabIndex={-1} role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog" role="document">
                     <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">Modal title</h5>
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                        <div>
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Enter your prnamincipal">
-                            </input>
-                        </div>
+                        <div className="modal-body" style={{ display: "flex", alignItems: "center", justifyContent: "space-around" }}>
                         <button className="btn btn-primary" onClick={handleLogin}>
                             Login with Internet Identity
                         </button>
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" className="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                 </div>

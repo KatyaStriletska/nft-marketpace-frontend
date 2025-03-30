@@ -93,10 +93,12 @@ export interface _SERVICE {
   'balanceOfDip721' : ActorMethod<[Principal], bigint>,
   'burnDip721' : ActorMethod<[bigint], TxReceipt>,
   'buyNFT' : ActorMethod<[bigint], TxReceipt>,
+  'deleteNFT' : ActorMethod<[bigint], TxReceipt>,
   'getAllNFTs' : ActorMethod<[], Array<Nft>>,
   'getApprovedDip721' : ActorMethod<[bigint], TxReceipt>,
   'getAssetDip721' : ActorMethod<[bigint], Uint8Array | number[]>,
   'getAvailableNFTs' : ActorMethod<[], Array<Nft>>,
+  'getCaller' : ActorMethod<[], Principal>,
   'getMetadataDip721' : ActorMethod<[bigint], MetadataResult>,
   'getMetdataForUserDip721' : ActorMethod<
     [Principal],

@@ -9,6 +9,7 @@ import '../styles/userProfilePage.css';
 //import { Principal } from '@dfinity/candid/lib/cjs/idl';
 import { Principal } from "@dfinity/principal";
 import { AuthClient } from '@dfinity/auth-client';
+import { useAuth } from './AuthContext';
 
 interface User {
   username: string;
@@ -48,18 +49,30 @@ const UserProfilePage: React.FC = () => {
   const [saleHistory] = useState<HistoryItem[]>([
     { id: 201, nftName: 'Old Kitty #3', date: '2024-03-10', price: '0.08 ICP' },
   ]);
-  const [principal, setPrincipal] = useState<Principal | null>(null);
+  const { principal, logout } = useAuth()
   useEffect(() => {
-    const storedPrincipal = localStorage.getItem("userPrincipal");
-    console.log("Stored Principal:", storedPrincipal);
-    if (storedPrincipal) {
-      
-      setPrincipal(Principal.fromText(storedPrincipal));
-      console.log(principal)
+    if (principal) {
+      console.log("User is logged in with Principal:", principal.toString());
+    } else {
+      console.log("User doesn't have a Principal");
     }
-    // setPrincipal(Principal.fromText(storedPrincipal));
-  }, []);
-
+  }, [principal]);
+  const burnNft = async (nftId: bigint) => {
+    try {
+      const actor = await getActor();
+      const result = await actor.deleteNFT(nftId);
+      console.log('Burn result:', result);
+  
+      if ('Ok' in result) {
+        setOwnedNFTs((prevNFTs) => prevNFTs.filter((nft) => nft.id !== nftId));
+      } else {
+        console.error('Burn failed:', result.Err);
+      }
+    } catch (error) {
+      console.error('Failed to burn NFT:', error);
+    }
+  };
+  
   useEffect(() => {
     const loadNFTs = async () => {
       try {
@@ -68,9 +81,6 @@ const UserProfilePage: React.FC = () => {
           console.error("Principal is null");
           return;
         }
-
-        
-
         const tokenIds: bigint[] = Array.from(await actor.tokensOfOwnerDip721(principal));
         const fetchedNFTs: OwnedNft[] = await Promise.all(
           tokenIds.map(async (id) => {
@@ -113,17 +123,12 @@ const UserProfilePage: React.FC = () => {
   
     loadNFTs();
   }, [principal]);
-   const handleLogout = async () => {
-      const authClient = await AuthClient.create();
-      await authClient.logout();
-      setPrincipal(null);
-    };
-
+  
   return (
     <div className="user-profile-page">
       <div className="profile-header">
         
-        <button onClick={handleLogout}>Log out</button>
+        <button onClick={logout}>Log out</button>
       </div>
       {principal ? <h1>Your Principal: {principal.toString()}</h1> : <h1>Not authorised</h1>}
 
@@ -141,7 +146,7 @@ const UserProfilePage: React.FC = () => {
                 <div key={nft.id} className="nft-card">
                   <img src={nft.imageUrl} alt={nft.name} />
                   <h3>{nft.name}</h3>
-                  {/* <p>Price: {nft.price}</p> */}
+                  <button onClick={() => burnNft(nft.id)}>Burn</button>
                   <Link to={`/nft/${nft.id}`}>View</Link>
                 </div>
               ))

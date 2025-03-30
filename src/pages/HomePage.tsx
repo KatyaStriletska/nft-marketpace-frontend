@@ -14,7 +14,7 @@ const HomePage: React.FC = () => {
   const [loadingNFTs, setLoadingNFTs] = useState(true);
   const [nfts, setNfts] = useState<Nft[]>([]);
   const [nftsForSale, setNftsForSale] = useState<Nft[]>([]);
-
+  
   const GETnfts = async () => {
     try {
       const actor = await getActor();
@@ -29,7 +29,7 @@ const HomePage: React.FC = () => {
           const imageUrl = URL.createObjectURL(new Blob([nft.content])); 
 
           return {
-            id: index, 
+            id: nft.id, 
             name: metadata.key_val_data.find((item: any) => item[0] === 'name')?.[1]?.TextContent || 'Unknown',
             imageUrl: imageUrl,
             price: nft.price[0]?.toString() || '0 ICP',
@@ -46,7 +46,7 @@ const HomePage: React.FC = () => {
           const imageUrl = URL.createObjectURL(new Blob([nft.content])); 
 
           return {
-            id: index, 
+            id: nft.id, 
             name: metadata.key_val_data.find((item: any) => item[0] === 'name')?.[1]?.TextContent || 'Unknown',
             imageUrl: imageUrl,
             price: nft.price[0]?.toString() || '0 ICP',
@@ -84,6 +84,7 @@ const HomePage: React.FC = () => {
                 <p>No NFTs yet.</p>
               ) : (
                 nfts.map((nft) => (
+                  console.log("nft", nft),
                   <div key={nft.id} className="nft-card">
                     <img src={nft.imageUrl} alt={nft.name} />
                     <h3>{nft.name}</h3>

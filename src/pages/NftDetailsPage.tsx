@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import '../styles/nftDetailsPage.css';
 import { getActor } from '../declarations';
-import { Principal } from '@dfinity/principal';
-import { MetadataDesc } from '../declarations/dip721_nft_container.did';
 
 interface Nft {
   id: bigint;
@@ -16,7 +14,7 @@ interface Nft {
 }
 
 const NftDetailsPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // get ID from URL
+  const { id } = useParams<{ id: string }>(); 
   const [nft, setNft] = useState<Nft | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -110,11 +108,20 @@ const NftDetailsPage: React.FC = () => {
     console.log("buyNft");
     console.log("id", id);
     console.log("nft", nft.id);
+    console.log(nft.owner.toString());
+
     const actor = await getActor();
     if(id){
        try {
-      const result = await actor.buyNFT(BigInt(id));
-      console.log("Transaction successful:", result);
+       console.log("Caller Principal:");
+        const actor = await getActor(); // Ваш актор для каністри
+       const caller = await actor.getCaller();
+       console.log("Caller Principal:", caller.toString());
+       console.log("Caller Principal:", caller);
+
+          
+      // const result = await actor.buyNFT(BigInt(id));
+      // console.log("Transaction successful:", result);
     } catch (error) {
         console.error("Transaction failed:", error);
     }

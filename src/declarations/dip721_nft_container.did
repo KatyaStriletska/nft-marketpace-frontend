@@ -139,6 +139,7 @@ service : (InitArgs) -> {
     listNFTForSale : (nat64, nat64) -> (variant { ok : nat64; err : text });
     getAvailableNFTs : () -> (vec Nft) query;
     buyNFT : (nat64) -> (TxReceipt);
+    deleteNFT : (nat64) -> (TxReceipt);
     getNftByIdDip721: (nat64) -> (opt Nft) query;
     tokensOfOwnerDip721 : (principal) -> (vec nat64) query;
     getAssetDip721 : (nat64) -> (vec nat8) query;

@@ -4,6 +4,7 @@ import { Principal } from '@dfinity/principal';
 import { AuthClient } from "@dfinity/auth-client";
 import { getActor } from '../declarations';
 import type { MetadataPart } from "../declarations/dip721_nft_container.did";
+import { useAuth } from './AuthContext';
 
 const MintNftPage: React.FC = () => {
   const [name, setName] = useState('');
@@ -11,40 +12,33 @@ const MintNftPage: React.FC = () => {
   const [asset, setAsset] = useState<File | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [price, setPrice] = useState<bigint | null>(null);
-  const [userPrincipal, setUserPrincipal] = useState<Principal | null>(null);
+  // const [userPrincipal, setUserPrincipal] = useState<Principal | null>(null);
   const [isForSale, setIsForSale] = useState(false);
-
+  const {principal} = useAuth();
   useEffect(() => {
-    checkLoginStatus();
-  }, []);
+     if (principal) {
+       console.log("User is logged in with Principal:", principal.toString());
+     } else {
+       console.log("User doesn't have a Principal");
+     }
+   }, [principal]);
 
-  const checkLoginStatus = async () => {
-    const authClient = await AuthClient.create();
-    if (await authClient.isAuthenticated()) {
-      const identity = authClient.getIdentity();
-      const principal = identity.getPrincipal().toString();
-      localStorage.setItem("userPrincipal", principal);
-
-      setUserPrincipal(identity.getPrincipal());
-    }
-  };
-
-  const handleLogin = async () => {
-    const authClient = await AuthClient.create();
-    await authClient.login({
-      identityProvider: "https://identity.ic0.app",
-      onSuccess: async () => {
-        const identity = authClient.getIdentity();
-        setUserPrincipal(identity.getPrincipal());
-      },
-      onError: (err) => console.error("Login failed:", err),
-    });
-  };
-  const handleLogout = async () => {
-    const authClient = await AuthClient.create();
-    await authClient.logout();
-    setUserPrincipal(null);
-  };
+  // const handleLogin = async () => {
+  //   const authClient = await AuthClient.create();
+  //   await authClient.login({
+  //     identityProvider: "https://identity.ic0.app",
+  //     onSuccess: async () => {
+  //       const identity = authClient.getIdentity();
+  //       setUserPrincipal(identity.getPrincipal());
+  //     },
+  //     onError: (err) => console.error("Login failed:", err),
+  //   });
+  // };
+  // const handleLogout = async () => {
+  //   const authClient = await AuthClient.create();
+  //   await authClient.logout();
+  //   setUserPrincipal(null);
+  // };
   // Hardcoded test principal (replace with Plug later or use your own dev ID)
   // const recipient = Principal.fromText("w3ek4-dpcyk-w6bpo-ixbku-mr2zs-szjqo-kkxob-fz4se-y7brs-u72cj-rae");
 
@@ -80,7 +74,7 @@ const MintNftPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     console.log(price);
     e.preventDefault();
-    if (!userPrincipal) {
+    if (!principal) {
       setStatus("❌ Please log in first!");
       return;
     }
@@ -102,7 +96,7 @@ const MintNftPage: React.FC = () => {
           purpose: { Rendered: null },
         },
       ];
-      const result = await actor.mintDip721(userPrincipal, metadata, assetBytes, price ?? BigInt(0));
+      const result = await actor.mintDip721(principal, metadata, assetBytes, price ?? BigInt(0));
       if ('Ok' in result) {
         setStatus(`✅ Minted successfully! Token ID: ${result.Ok.token_id.toString()}`);
       } else {
@@ -120,13 +114,10 @@ const MintNftPage: React.FC = () => {
     Mint New NFT
   </h1>
 </div>
-
-      
-
       <div className="my-4">
-        {userPrincipal ? (
+        {/* {principal ? (
           <div>
-            <p>✅ Logged in as: {userPrincipal.toText()}</p>
+            <p>✅ Logged in as: {principal.toText()}</p>
             <button className="btn btn-danger" onClick={handleLogout}>
               Logout
             </button>
@@ -135,7 +126,7 @@ const MintNftPage: React.FC = () => {
           <button className="btn btn-primary" onClick={handleLogin}>
             Login with Internet Identity
           </button>
-        )}
+        )} */}
       </div>
       <form onSubmit={handleSubmit} className="max-w-sm mx-auto bg-white p-8 rounded-md" style={{ padding: '40px', borderRadius: '19px' }}>
         <div className="form-group">
@@ -165,7 +156,6 @@ const MintNftPage: React.FC = () => {
       <div className="form-group " style={{ display: isForSale ? 'block' : 'none' }}>
         <label htmlFor="price">Price:</label>
         <input
-
           type="number"
           id="price"
           value={price !== null ? price.toString() : ''}

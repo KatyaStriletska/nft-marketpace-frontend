@@ -19,9 +19,11 @@ import NavBar from './components/NavBar';
 
 import './App.css';
 import './index.css';
+import { AuthProvider } from './pages/AuthContext';
 
 const App: React.FC = () => {
   return (
+    <AuthProvider>
     <Router>
       <div className="App">
         {/* Optional: Switch between NavigationBar and NavBar */}
@@ -40,6 +42,7 @@ const App: React.FC = () => {
         </Routes>
       </div>
     </Router>
+    </AuthProvider>
   );
 };
 

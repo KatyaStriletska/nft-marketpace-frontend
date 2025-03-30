@@ -15,8 +15,10 @@ interface Nft {
   transactionHistory: string[];
 }
 
+// ... (весь імпорт залишаємо без змін)
+
 const NftDetailsPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // get ID from URL
+  const { id } = useParams<{ id: string }>();
   const [nft, setNft] = useState<Nft | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,9 +35,6 @@ const NftDetailsPage: React.FC = () => {
       }
 
       const nft = nftResult[0];
-      console.log(nft);
-
-      // Створюємо URL для зображення на основі content
       const blob = new Blob([new Uint8Array(nft.content)], { type: 'image/png' });
       const imageUrl = URL.createObjectURL(blob);
 
@@ -45,37 +44,30 @@ const NftDetailsPage: React.FC = () => {
 
       if ("Ok" in nft.metadata) {
         const part = (nft.metadata.Ok as { key_val_data: [string, any][] }[])[0];
-        
-        // Отримання імені
+
         const nameEntry = part.key_val_data.find(([key]) => key === "name");
         if (nameEntry && "TextContent" in nameEntry[1]) {
           name = nameEntry[1].TextContent;
         }
 
-        // Отримання опису
         const descriptionEntry = part.key_val_data.find(([key]) => key === "description");
         if (descriptionEntry && "TextContent" in descriptionEntry[1]) {
           description = descriptionEntry[1].TextContent;
         }
 
-        // Отримання історії транзакцій
         const historyEntry = part.key_val_data.find(([key]) => key === "history");
         if (historyEntry && "TextContent" in historyEntry[1]) {
-          transactionHistory = historyEntry[1].TextContent.split(';'); // Припустимо, що транзакції розділені крапкою з комою
+          transactionHistory = historyEntry[1].TextContent.split(';');
         }
       }
-      //  else {
-      //   console.error("Помилка отримання метаданих:", nft.metadata);
-      // }
 
-      // Встановлення стану NFT
       setNft({
         id,
         name,
         imageUrl,
         description,
-        owner: nft.owner.toText().slice(0, 10) + '...', // Вивід частини ідентифікатора власника
-        price: '-', // Поки що ціна не передається в метаданих
+        owner: nft.owner.toText().slice(0, 10) + '...',
+        price: '-', // при бажанні можна зробити витяг з metadata
         transactionHistory,
       });
       setLoading(false);
@@ -95,45 +87,25 @@ const NftDetailsPage: React.FC = () => {
     }
   }, [id]);
 
-  if (loading) {
-    return <div>Loading NFT details...</div>;
-  }
+  if (loading) return <div>Loading NFT details...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!nft) return <div>NFT not found.</div>;
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (!nft) {
-    return <div>NFT not found.</div>;
-  }
-  const buyNft = async () =>{
-    console.log("buyNft");
-    console.log("id", id);
-    console.log("nft", nft.id);
+  const buyNft = async () => {
     const actor = await getActor();
-    if(id){
-       try {
-      const result = await actor.buyNFT(BigInt(id));
-      console.log("Transaction successful:", result);
-    } catch (error) {
+    if (id) {
+      try {
+        const result = await actor.buyNFT(BigInt(id));
+        console.log("Transaction successful:", result);
+      } catch (error) {
         console.error("Transaction failed:", error);
+      }
     }
-    const nftResult = await actor.getNftByIdDip721(BigInt(id));
+  };
 
-    if (nftResult.length === 0) {
-      setError(`NFT з ID ${id} не знайдено`);
-      setLoading(false);
-      return;
-    }
-
-    const nft = nftResult[0];
-    console.log(nft);
-    }
-   
-  }
   return (
     <div className="nft-details-page">
-      <div className='nft-details-page-container'>
+      <div className="nft-details-page-container">
         <h1 className="text-4xl font-extrabold text-white" style={{ textShadow: '0 0 10px #00e676' }}>
           {nft.name}
         </h1>
@@ -153,7 +125,6 @@ const NftDetailsPage: React.FC = () => {
         <div className="nft-actions">
           <button onClick={buyNft}>Buy</button>
           <button onClick={() => alert('Sell action triggered')}>Sell</button>
-          <button onClick={() => alert('Trade action triggered')}>Trade</button>
         </div>
 
         {nft.transactionHistory.length > 0 && (

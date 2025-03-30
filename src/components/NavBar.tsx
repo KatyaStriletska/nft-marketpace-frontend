@@ -20,7 +20,6 @@ interface NavItem {
 }
 
 const navigation: NavItem[] = [
-  { name: 'Home', href: '/' },
   { name: 'All NFTs', href: '/nfts' },
   { name: 'Mint NFT', href: '/mint' },
   { name: 'Sell NFT', href: '/sell' },

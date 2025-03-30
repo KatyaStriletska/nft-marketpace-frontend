@@ -71,6 +71,7 @@ export const idlFactory = ({ IDL }) => {
     'TransferNotification' : IDL.Null,
   });
   return IDL.Service({
+    'deleteNFT' : IDL.Func([IDL.Nat64], [TxReceipt], []),
     'approveDip721' : IDL.Func([IDL.Principal, IDL.Nat64], [TxReceipt], []),
     'balanceOfDip721' : IDL.Func([IDL.Principal], [IDL.Nat64], ['query']),
     'burnDip721' : IDL.Func([IDL.Nat64], [TxReceipt], []),

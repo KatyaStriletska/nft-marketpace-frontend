@@ -89,6 +89,7 @@ export interface TxResult {
   'transaction_type' : TransactionType,
 }
 export interface _SERVICE {
+  'deleteNFT' : ActorMethod<[bigint], TxReceipt>,
   'approveDip721' : ActorMethod<[Principal, bigint], TxReceipt>,
   'balanceOfDip721' : ActorMethod<[Principal], bigint>,
   'burnDip721' : ActorMethod<[bigint], TxReceipt>,

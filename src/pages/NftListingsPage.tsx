@@ -1,67 +1,56 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/nftListingsPage.css';
+import { getActor } from '../declarations';
 
 interface Nft {
   id: number;
   name: string;
   imageUrl: string;
   price: string;
-  category: string;
 }
 
 const NftListingsPage: React.FC = () => {
+  const [nfts, setNfts] = useState<Nft[]>([]);
+  const [filteredNfts, setFilteredNfts] = useState<Nft[]>([]);
   const [sortOption, setSortOption] = useState<string>('price-low-to-high');
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [loading, setLoading] = useState(true);
 
-  const originalNfts: Nft[] = [
-    {
-      id: 1,
-      name: 'Death star',
-      imageUrl: 'https://cdn.pixabay.com/photo/2025/02/12/05/02/futuristic-9400300_1280.jpg',
-      price: '10 ICP',
-      category: 'Art',
-    },
-    {
-      id: 2,
-      name: 'space',
-      imageUrl: 'https://images.unsplash.com/photo-1615114814213-a245ffc79e9a?w=600&auto=format&fit=crop&q=60',
-      price: '0.12 ICP',
-      category: 'Collectibles',
-    },
-    {
-      id: 3,
-      name: 'Nebula',
-      imageUrl: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=600&auto=format&fit=crop&q=60',
-      price: '0.05 ICP',
-      category: 'Music',
-    },
-    {
-      id: 4,
-      name: 'Lonely',
-      imageUrl: 'https://plus.unsplash.com/premium_photo-1722178119251-d2a122401c24?w=600&auto=format&fit=crop&q=60',
-      price: '0.09 ICP',
-      category: 'Sports',
-    },
-    {
-      id: 5,
-      name: 'Invaders',
-      imageUrl: 'https://images.unsplash.com/photo-1660786254519-e899d4e2e405?w=600&auto=format&fit=crop&q=60',
-      price: '0.06 ICP',
-      category: 'Art',
-    },
-    {
-      id: 6,
-      name: 'New era',
-      imageUrl: 'https://plus.unsplash.com/premium_photo-1682124752476-40db22034a58?w=600&auto=format&fit=crop&q=60',
-      price: '0.15 ICP',
-      category: 'Collectibles',
-    },
-  ];
+  useEffect(() => {
+    const fetchNFTs = async () => {
+      try {
+        const actor = await getActor();
+        const result = await actor.getAllNFTs();
 
-  const [nfts, setNfts] = useState<Nft[]>(originalNfts);
+        if (Array.isArray(result)) {
+          const formatted = result.map((nft: any, index: number) => {
+            const metadata = nft.metadata[0];
+            const imageUrl = URL.createObjectURL(new Blob([nft.content]));
 
-  const sortNfts = (option: string, list: Nft[]) => {
+            return {
+              id: index,
+              name:
+                metadata.key_val_data.find((item: any) => item[0] === 'name')?.[1]?.TextContent || 'Unknown',
+              imageUrl,
+              price: nft.price[0]?.toString() || '0 ICP',
+            };
+          });
+
+          setNfts(formatted);
+          setFilteredNfts(formatted);
+        }
+      } catch (error) {
+        console.error('Error loading NFTs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNFTs();
+  }, []);
+
+  const sortNfts = (list: Nft[], option: string) => {
     const sorted = [...list];
     if (option === 'price-low-to-high') {
       sorted.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
@@ -75,100 +64,129 @@ const NftListingsPage: React.FC = () => {
     return sorted;
   };
 
-  const handleSort = (sortBy: string) => {
-    setSortOption(sortBy);
-    const filtered = originalNfts.filter((nft) =>
-      nft.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setNfts(sortNfts(sortBy, filtered));
+  const handleSort = (value: string) => {
+    setSortOption(value);
+    const sorted = sortNfts(filteredNfts, value);
+    setFilteredNfts(sorted);
   };
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
-    const filtered = originalNfts.filter((nft) =>
+    const filtered = nfts.filter((nft) =>
       nft.name.toLowerCase().includes(value.toLowerCase())
     );
-    setNfts(sortNfts(sortOption, filtered));
+    setFilteredNfts(sortNfts(filtered, sortOption));
   };
 
   return (
     <div className="nft-listings-page">
-      <h1
-        className="text-4xl font-extrabold text-white text-center mt-6"
-        style={{ textShadow: '0 0 10px #00e676' }}
-      >
+      <h1 className="text-4xl font-extrabold text-white text-center mt-6" style={{ textShadow: '0 0 10px #00e676' }}>
         All NFTs
       </h1>
 
-      <div
-  className="mt-6 ml-6"
-  style={{
-    display: 'flex',
-    alignItems: 'center',
-    gap: '1rem',
-  }}
->
-  {/* Label */}
-  <label htmlFor="sort" className="text-white text-xl">
-    Sorting
-  </label>
+      <div className="mt-6 ml-6" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <label htmlFor="sort" className="text-white text-xl">Sorting</label>
+        <select
+          id="sort"
+          onChange={(e) => handleSort(e.target.value)}
+          value={sortOption}
+          style={{
+            backgroundColor: '#ffffff',
+            color: '#000000',
+            border: 'none',
+            outline: 'none',
+            cursor: 'pointer',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+            borderRadius: '6px',
+            padding: '0.5rem 1rem',
+          }}
+        >
+          <option value="price-low-to-high">Price: low to high</option>
+          <option value="price-high-to-low">Price: high to low</option>
+          <option value="newest">Recent</option>
+          <option value="oldest">Older</option>
+        </select>
 
-  {/* Select (dropdown) */}
-  <select
-    id="sort"
-    onChange={(e) => handleSort(e.target.value)}
-    value={sortOption}
-    style={{
-      backgroundColor: '#ffffff',
-      color: '#000000',
-      border: 'none',
-      outline: 'none',
-      cursor: 'pointer',
-      boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-      borderRadius: '6px',
-      padding: '0.5rem 1rem',
-    }}
-  >
-    <option value="price-low-to-high">Price: low to high</option>
-    <option value="price-high-to-low">Price: high to low</option>
-    <option value="newest">Recent</option>
-    <option value="oldest">Older</option>
-  </select>
-
-  {/* Input (search) */}
-  <input
-    type="text"
-    placeholder="Search NFTs..."
-    value={searchTerm}
-    onChange={handleSearch}
-    style={{
-      backgroundColor: '#ffffff',
-      color: '#000000',
-      border: 'none',
-      outline: 'none',
-      boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-      borderRadius: '6px',
-      padding: '0.5rem 1rem',
-      fontSize: '1rem',
-      minWidth: '200px',
-    }}
-  />
-</div>
-
-
-
-      <div className="nft-grid">
-        {nfts.map((nft) => (
-          <div key={nft.id} className="nft-item">
-            <img src={nft.imageUrl} alt={nft.name} />
-            <h3>{nft.name}</h3>
-            <p>Price: {nft.price}</p>
-            <p>Category: {nft.category}</p>
-            <Link to={`/nft/${nft.id}`}>See details</Link>
-          </div>
-        ))}
+        <input
+          type="text"
+          placeholder="Search NFTs..."
+          value={searchTerm}
+          onChange={handleSearch}
+          style={{
+            backgroundColor: '#ffffff',
+            color: '#000000',
+            border: 'none',
+            outline: 'none',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+            borderRadius: '6px',
+            padding: '0.5rem 1rem',
+            fontSize: '1rem',
+            minWidth: '200px',
+          }}
+        />
       </div>
+
+      {loading ? (
+        <p className="text-white mt-6 ml-6">Loading NFTs...</p>
+      ) : (
+        <div
+          className="nft-list"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+            gap: '1.5rem',
+            marginTop: '2rem',
+            justifyItems: 'center',
+            maxWidth: '1540px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+          }}
+        >
+          {filteredNfts.map((nft) => (
+            <div
+              key={nft.id}
+              className="nft-card"
+              style={{
+                backgroundColor: 'white',
+                padding: '1rem',
+                borderRadius: '10px',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.15)',
+                color: 'black',
+                width: '100%',
+                maxWidth: '220px',
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <img
+                src={nft.imageUrl}
+                alt={nft.name}
+                style={{ width: '100%', borderRadius: '6px' }}
+              />
+              <h3 style={{ fontSize: '1rem', marginTop: '0.5rem' }}>{nft.name}</h3>
+              <p style={{ margin: '0.3rem 0' }}>Price: {nft.price}</p>
+              <Link
+                to={`/nft/${nft.id}`}
+                style={{
+                  backgroundColor: 'rgb(0, 102, 204)',
+                  color: 'white',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  fontWeight: 'bold',
+                  display: 'inline-block',
+                  marginTop: '0.5rem',
+                }}
+              >
+                More
+              </Link>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

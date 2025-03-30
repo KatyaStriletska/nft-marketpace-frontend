@@ -72,13 +72,19 @@ const MintNftPage: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log(price);
     e.preventDefault();
     if (!principal) {
       setStatus("❌ Please log in first!");
       return;
     }
+
+    if (isForSale && (!price || price <= BigInt(0))) {
+      setStatus("❌ Please enter a valid price to list the NFT for sale.");
+      return;
+    }
+
     setStatus('Minting NFT...');
+
     try {
       const actor = await getActor();
       let assetBytes = new Uint8Array([]);
@@ -86,6 +92,7 @@ const MintNftPage: React.FC = () => {
         const buffer = await asset.arrayBuffer();
         assetBytes = new Uint8Array(buffer);
       }
+
       const metadata: MetadataPart[] = [
         {
           data: assetBytes,
@@ -96,7 +103,14 @@ const MintNftPage: React.FC = () => {
           purpose: { Rendered: null },
         },
       ];
-      const result = await actor.mintDip721(principal, metadata, assetBytes, price ?? BigInt(0));
+
+      const result = await actor.mintDip721(
+        principal,
+        metadata,
+        assetBytes,
+        isForSale ? (price ?? BigInt(0)) : BigInt(0) // 💡 Якщо не продається — ціна BigInt(0)
+      );
+
       if ('Ok' in result) {
         setStatus(`✅ Minted successfully! Token ID: ${result.Ok.token_id.toString()}`);
       } else {
@@ -107,13 +121,15 @@ const MintNftPage: React.FC = () => {
       setStatus('❌ Mint failed due to unexpected error.');
     }
   };
+
   return (
-    <div style={{ display: 'flex', flexDirection: "column", alignContent: "space-around", justifyContent: "space-evenly", alignItems: "center" }}>
+    <div style={{ display: 'flex', flexDirection: "column", alignItems: "center" }}>
       <div className="flex justify-center mt-7">
-  <h1 className="text-4xl font-extrabold text-white" style={{ textShadow: '0 0 10px #00e676' }}>
-    Mint New NFT
-  </h1>
-</div>
+        <h1 className="text-4xl font-extrabold text-white" style={{ textShadow: '0 0 10px #00e676' }}>
+          Mint New NFT
+        </h1>
+      </div>
+
       <div className="my-4">
         {/* {principal ? (
           <div>
@@ -128,54 +144,59 @@ const MintNftPage: React.FC = () => {
           </button>
         )} */}
       </div>
+
       <form onSubmit={handleSubmit} className="max-w-sm mx-auto bg-white p-8 rounded-md" style={{ padding: '40px', borderRadius: '19px' }}>
         <div className="form-group">
           <label htmlFor="name">Name:</label>
-          <input type="text" id="name" value={name} onChange={handleNameChange} required />
+          <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required />
         </div>
-  
+
         <div className="form-group">
           <label htmlFor="description">Description:</label>
-          <textarea id="description" value={description} onChange={handleDescriptionChange} />
+          <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
         </div>
-  
+
         <div className="form-group">
           <label htmlFor="asset">Upload File:</label>
-          <input type="file" id="asset" onChange={handleAssetChange} />
+          <input type="file" id="asset" onChange={(e) => setAsset(e.target.files?.[0] || null)} />
         </div>
-        <div className="form-check form-switch">
-        <label className="form-check-label fw-bold" id="flexSwitchCheckDefault" htmlFor="isForSale">Put up for sale</label>
-        <input
-          className="form-check-input bg-gray-700 border-gray-600"
-          type="checkbox"
-          id="isForSale"
-          checked={isForSale}
-          onChange={handleCheckboxChange}
-        />
-      </div>
-      <div className="form-group " style={{ display: isForSale ? 'block' : 'none' }}>
-        <label htmlFor="price">Price:</label>
-        <input
-          type="number"
-          id="price"
-          value={price !== null ? price.toString() : ''}
-          onChange={handlePriceChange}
-        />
-      </div>
+
+        <div className="form-check form-switch mt-3 mb-2">
+          <label className="form-check-label fw-bold" htmlFor="isForSale">Put up for sale</label>
+          <input
+            className="form-check-input bg-gray-700 border-gray-600"
+            type="checkbox"
+            id="isForSale"
+            checked={isForSale}
+            onChange={() => setIsForSale(!isForSale)}
+          />
+        </div>
+
+        {isForSale && (
+          <div className="form-group">
+            <label htmlFor="price">Price (ICP):</label>
+            <input
+              type="number"
+              id="price"
+              value={price !== null ? price.toString() : ''}
+              onChange={(e) => setPrice(BigInt(e.target.value))}
+              required={isForSale}
+            />
+          </div>
+        )}
+
         <button
           type="submit"
-          className="btn btn-primary btn-lg"
+          className="btn btn-primary btn-lg mt-3"
           style={{ width: "26rem" }}
         >
           Mint NFT
         </button>
 
-
         {status && <p className="mt-4 font-mono text-sm">{status}</p>}
       </form>
-  
-      
     </div>
   );
 };
-export default MintNftPage;  
+
+export default MintNftPage;

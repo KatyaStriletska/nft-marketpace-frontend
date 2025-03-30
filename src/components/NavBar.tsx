@@ -13,7 +13,6 @@ import './navigationBar.css';
 import { AuthClient } from '@dfinity/auth-client';
 import { Principal } from '@dfinity/principal';
 
-// Define the navigation type
 interface NavItem {
   name: string;
   href: string;
@@ -24,7 +23,6 @@ const navigation: NavItem[] = [
   { name: 'All NFTs', href: '/nfts' },
   { name: 'Mint NFT', href: '/mint' },
   { name: 'Sell NFT', href: '/sell' },
-  // { name: 'Profile', href: '/profile' },
 ];
 
 const NavigationBar: React.FC = () => {

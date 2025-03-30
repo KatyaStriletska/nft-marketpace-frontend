@@ -135,6 +135,7 @@ type HttpResponse = record {
 };
 
 service : (InitArgs) -> {
+    deleteNFT : (nat64) -> (TxReceipt);
     getAllNFTs : () -> (vec Nft) query;
     listNFTForSale : (nat64, nat64) -> (variant { ok : nat64; err : text });
     getAvailableNFTs : () -> (vec Nft) query;
